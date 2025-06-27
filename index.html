@@ -1,99 +1,236 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Kalora - Indie Roguelike</title>
+    <title>Kalora</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
             margin: 0;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            text-align: center;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Orbitron', monospace;
+            background: #0a0a0a;
+            color: #00ff41;
+            overflow-x: hidden;
+        }
+        
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 65, 0.03) 2px,
+                rgba(0, 255, 65, 0.03) 4px
+            );
+            pointer-events: none;
+            z-index: 1000;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 20px;
+            position: relative;
+        }
+        
+        header {
+            text-align: center;
+            padding: 100px 0;
+            background: radial-gradient(circle at center, rgba(0, 255, 65, 0.1) 0%, transparent 70%);
         }
         
         h1 {
-            font-size: 4rem;
-            margin: 50px 0 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 6rem;
+            font-weight: 900;
+            letter-spacing: 8px;
+            text-shadow: 
+                0 0 10px #00ff41,
+                0 0 20px #00ff41,
+                0 0 40px #00ff41;
+            margin-bottom: 20px;
+            animation: glow 2s ease-in-out infinite alternate;
         }
         
-        .tagline {
-            font-size: 1.3rem;
-            margin-bottom: 40px;
-            opacity: 0.9;
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 40px #00ff41; }
+            to { text-shadow: 0 0 20px #00ff41, 0 0 30px #00ff41, 0 0 60px #00ff41; }
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #66ff66;
+            letter-spacing: 3px;
+            margin-bottom: 50px;
+            text-transform: uppercase;
         }
         
         .btn {
-            background: #ff6b6b;
-            color: white;
-            padding: 15px 30px;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: bold;
             display: inline-block;
+            background: linear-gradient(45deg, #00ff41, #00cc33);
+            color: #000;
+            padding: 15px 40px;
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 2px solid #00ff41;
+            transition: all 0.3s;
             margin: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
         }
         
         .btn:hover {
-            background: #ff5252;
+            background: transparent;
+            color: #00ff41;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.6);
+            transform: translateY(-2px);
         }
         
-        .features {
-            background: rgba(255,255,255,0.1);
-            padding: 40px;
-            margin: 40px 0;
-            border-radius: 15px;
+        .terminal {
+            background: rgba(0, 20, 0, 0.8);
+            border: 2px solid #00ff41;
+            padding: 30px;
+            margin: 50px 0;
+            font-family: 'Courier New', monospace;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 65, 0.2),
+                inset 0 0 20px rgba(0, 255, 65, 0.1);
         }
         
-        .feature {
-            margin: 20px 0;
+        .terminal h2 {
+            color: #00ff41;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
         
-        .feature h3 {
-            color: #ffd93d;
-            font-size: 1.3rem;
+        .terminal-line {
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+        
+        .terminal-line::before {
+            content: "> ";
+            color: #00cc33;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .stat-box {
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid #00ff41;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat-box:hover {
+            background: rgba(0, 255, 65, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #66ff66;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 50px 0;
+            border-top: 1px solid #00ff41;
+            margin-top: 100px;
+            color: #66ff66;
+            font-size: 0.8rem;
+        }
+        
+        .glitch {
+            animation: glitch 0.3s infinite;
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
         }
     </style>
 </head>
 <body>
+    <div class="scanlines"></div>
+    
     <div class="container">
-        <h1>Kalora</h1>
-        <p class="tagline">A Roguelike Adventure Game</p>
-        
-        <a href="#" class="btn">Download Game</a>
-        <a href="#" class="btn">View Screenshots</a>
-        
-        <div class="features">
-            <h2>Game Features</h2>
-            
-            <div class="feature">
-                <h3>🎲 Random Dungeons</h3>
-                <p>Every playthrough is unique with procedurally generated levels</p>
+        <header>
+            <h1 class="glitch">KALORA</h1>
+            <p class="subtitle">Roguelike Protocol Initiated</p>
+            <a href="#" class="btn">Download</a>
+            <a href="#" class="btn">Screenshots</a>
+        </header>
+
+        <div class="terminal">
+            <h2>System Status</h2>
+            <div class="terminal-line">Procedural generation: ACTIVE</div>
+            <div class="terminal-line">Combat systems: ONLINE</div>
+            <div class="terminal-line">Shop protocol: ENABLED</div>
+            <div class="terminal-line">Difficulty scaling: ADAPTIVE</div>
+            <div class="terminal-line">Status: READY FOR DEPLOYMENT</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Unique Runs</div>
             </div>
-            
-            <div class="feature">
-                <h3>⚔️ Strategic Combat</h3>
-                <p>Turn-based battles with elemental weaknesses</p>
+            <div class="stat-box">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Combat Types</div>
             </div>
-            
-            <div class="feature">
-                <h3>🛒 Upgrade Shop</h3>
-                <p>Spend gold on powerful upgrades and items</p>
+            <div class="stat-box">
+                <div class="stat-number">85%</div>
+                <div class="stat-label">Enemy Spawn Rate</div>
             </div>
-            
-            <div class="feature">
-                <h3>🎮 Retro Style</h3>
-                <p>Classic pixel art with modern gameplay</p>
+            <div class="stat-box">
+                <div class="stat-number">v0.1</div>
+                <div class="stat-label">Current Build</div>
             </div>
         </div>
-        
-        <p>Made by an indie developer • Version 0.1.0</p>
+
+        <div class="terminal">
+            <h2>Mission Brief</h2>
+            <div class="terminal-line">Navigate procedurally generated dungeons</div>
+            <div class="terminal-line">Engage hostile entities using tactical combat</div>
+            <div class="terminal-line">Acquire resources and upgrade equipment</div>
+            <div class="terminal-line">Survive as long as possible</div>
+        </div>
+
+        <footer>
+            <p>DEVELOPED BY INDIE PROTOCOL • CLASSIFIED PROJECT KALORA</p>
+        </footer>
     </div>
 </body>
 </html>
